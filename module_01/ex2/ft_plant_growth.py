@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 
 class Plant:
-    def __init__(self, name, height, age):
+    def __init__(self, name: str, height: str, age: str) -> None:
+        """Initializing the variables."""
         self.name = name
         self.height = height
         self.age = age
 
-    def grow(self):
+    def grow(self) -> int:
+        """Growing the plant by 1 cm."""
         self.height += 1
 
-    def ft_age(self):
+    def ft_age(self) -> int:
+        """Aging the plant by 1 cm."""
         self.age += 1
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """Returning information in f-string format."""
         return f"{self.name}: {self.height}cm, {self.age} days old"
 
-    def get_info(self):
+    def get_info(self) -> None:
+        """Printing this information."""
         print(self)
 
 

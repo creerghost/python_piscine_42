@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 class Plant:
-    def __init__(self, name, height, age):
+    """Plant class. Easy."""
+    def __init__(self, name: str, height: int, age: int) -> None:
+        """Initializing the variables."""
         self.name = name
         self.height = height
         self.age = age
 
     def __repr__(self):
+        """Returning information about the plant as f-string."""
         return F"{self.name}: {self.height}cm, {self.age} days old"
 
 

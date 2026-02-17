@@ -3,7 +3,9 @@
 class Plant:
     total_plants = 0
 
-    def __init__(self, name, height, age):
+    def __init__(self, name: str, height: int, age: int) -> None:
+        """Initializing the variables and printing what was initialized. Each
+        class call will summarize the number of total plants."""
         self.name = name
         self.height = height
         self.age = age
