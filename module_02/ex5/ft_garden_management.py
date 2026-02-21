@@ -22,8 +22,7 @@ class GardenManager():
     def add(self, plant: Plant) -> None:
         try:
             if plant.name is None:
-                raise ValueError("Error adding plant: Plant name cannot be"
-                                 " empty!")
+                raise ValueError("Plant name cannot be empty!")
             self.plants.append(plant)
             print(f"Added {plant.name} successfully")
         except ValueError as e:
