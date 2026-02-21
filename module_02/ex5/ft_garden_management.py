@@ -1,17 +1,19 @@
 class GardenError(Exception):
     pass
 
+
 class WaterError(GardenError):
-    def __init__(self):
-        self.message = f"Not enough water in tank!"
+    def __init__(self) -> None:
+        self.message = "Not enough water in tank!"
         super().__init__(self.message)
 
 
 class Plant:
-    def __init__(self, name:str, water_lvl: int, sun_lvl: int) -> None:
+    def __init__(self, name: str, water_lvl: int, sun_lvl: int) -> None:
         self.name = name
         self.water_lvl = water_lvl
         self.sun_lvl = sun_lvl
+
 
 class GardenManager():
     def __init__(self) -> None:
@@ -20,7 +22,8 @@ class GardenManager():
     def add(self, plant: Plant) -> None:
         try:
             if plant.name is None:
-                raise ValueError("Error adding plant: Plant name cannot be empty!")
+                raise ValueError("Error adding plant: Plant name cannot be"
+                                 " empty!")
             self.plants.append(plant)
             print(f"Added {plant.name} successfully")
         except ValueError as e:
@@ -31,7 +34,8 @@ class GardenManager():
         try:
             for plant in self.plants:
                 if plant is None:
-                    raise ValueError(f"Cannot water {plant.name} - invalid plant!")
+                    raise ValueError(f"Cannot water {plant.name} - "
+                                     f"invalid plant!")
                 print(f"Watering {plant.name} - success")
         except ValueError as e:
             print(f"Error: {e}")
@@ -41,13 +45,15 @@ class GardenManager():
     def check_plant_health(self, plant: Plant) -> None:
         try:
             if plant.water_lvl > 10:
-                raise ValueError(f"Water level {plant.water_lvl} is too high (max 10)")
+                raise ValueError(f"Water level {plant.water_lvl} is"
+                                 f" too high (max 10)")
             if plant.sun_lvl < 2:
-                raise ValueError(f"Sunlight level {plant.sun_lvl} is too low (min 2)")
-            print(f"{plant.name}: healthy (water: {plant.water_lvl}, sun: {plant.sun_lvl})")
+                raise ValueError(f"Sunlight level {plant.sun_lvl} is"
+                                 f" too low (min 2)")
+            print(f"{plant.name}: healthy (water: {plant.water_lvl},"
+                  f" sun: {plant.sun_lvl})")
         except ValueError as e:
             print(f"Error checking {plant.name}: {e}")
-
 
 
 def test_garden_management():
@@ -83,5 +89,7 @@ def test_garden_management():
     print()
 
     print("Garden management system test complete!")
+
+
 if __name__ == "__main__":
     test_garden_management()

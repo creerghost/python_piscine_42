@@ -1,12 +1,12 @@
 def check_temperature(temp_str: str) -> int | None:
     try:
         print(f"Testing temperature: {temp_str}")
-        temp = int(temp_str)
+        temp: int = int(temp_str)
         if temp > 40:
             print(f"Error: {temp}°C is too hot for plants (max 40°C)\n")
             return None
         elif temp < 0:
-            print(f"Error: {temp}°C is too cold for plants (max 40°C)\n")
+            print(f"Error: {temp}°C is too cold for plants (min 0°C)\n")
             return None
         else:
             print(f"Temperature {temp}°C is perfect for plants!\n")

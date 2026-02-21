@@ -3,14 +3,14 @@ class GardenError(Exception):
 
 
 class PlantError(GardenError):
-    def __init__(self):
-        self.message = f"The Tomato is wilting!"
+    def __init__(self) -> None:
+        self.message = "The Tomato is wilting!"
         super().__init__(self.message)
 
 
 class WaterError(GardenError):
-    def __init__(self):
-        self.message = f"Not enough water in the tank!"
+    def __init__(self) -> None:
+        self.message = "Not enough water in the tank!"
         super().__init__(self.message)
 
 
