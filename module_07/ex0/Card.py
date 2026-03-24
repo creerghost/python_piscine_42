@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict
 from abc import ABC, abstractmethod
 
 
@@ -9,10 +9,10 @@ class Card(ABC):
         self.rarity = rarity
 
     @abstractmethod
-    def play(self, game_state: Dict[Any]) -> Dict[Any]:
+    def play(self, game_state: Dict) -> Dict:
         pass
 
-    def get_card_info(self) -> Dict[Dict[Any]]:
+    def get_card_info(self) -> Dict:
         return {"name": self.name,
                 "cost": self.cost,
                 "rarity": self.rarity}
