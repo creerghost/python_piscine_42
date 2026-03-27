@@ -3,7 +3,7 @@ from ex4.TournamentPlatform import TournamentPlatform
 from typing import Dict
 
 
-def main():
+def main() -> None:
     print("=== DataDeck Tournament Platform ===")
     platform: TournamentPlatform = TournamentPlatform()
 
