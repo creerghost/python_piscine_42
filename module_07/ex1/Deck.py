@@ -7,7 +7,8 @@ from ex1.ArctifactCard import ArctifactCard
 
 
 class Deck:
-    card_list: List[Card] = []
+    def __init__(self) -> None:
+        self.card_list: List[Card] = []
 
     def add_card(self, card: Card) -> None:
         self.card_list.append(card)
@@ -23,7 +24,9 @@ class Deck:
         random.shuffle(self.card_list)
 
     def draw_card(self) -> Card:
-        return self.card_list[0]
+        if not self.card_list:
+            raise ValueError("The deck is empty")
+        return self.card_list.pop(0)
 
     def get_deck_stats(self) -> Dict:
         creatures: List[Card] = [x for x in self.card_list

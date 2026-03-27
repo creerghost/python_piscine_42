@@ -9,7 +9,7 @@ class Card(ABC):
         self.rarity = rarity
 
     @abstractmethod
-    def play(self, game_state: Dict) -> Dict:
+    def play(self, game_state: Dict = None) -> Dict:
         pass
 
     def get_card_info(self) -> Dict:
