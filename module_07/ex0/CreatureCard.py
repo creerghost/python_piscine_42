@@ -1,5 +1,5 @@
 from ex0.Card import Card
-from typing import Dict
+from typing import Dict, Any
 
 
 class CreatureCard(Card):
@@ -20,7 +20,7 @@ class CreatureCard(Card):
                 "mana_used": self.cost,
                 "effect": "Creature summoned to battlefield"}
 
-    def attack_target(self, target: Dict) -> Dict:
+    def attack_target(self, target: Any) -> Dict[str, Any]:
         target_name: str = target.name if hasattr(target,
                                                   'name') else str(target)
 
@@ -29,7 +29,7 @@ class CreatureCard(Card):
                 "damage_dealt": self.attack,
                 "combat_resolved": True}
 
-    def get_card_info(self) -> Dict:
+    def get_card_info(self) -> Dict[str, Any]:
         info = super().get_card_info()
         info["type"] = "Creature"
         info["attack"] = self.attack

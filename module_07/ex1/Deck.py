@@ -1,5 +1,5 @@
 from ex0.Card import Card
-from typing import List, Dict
+from typing import List, Dict, Union
 import random
 from ex1.SpellCard import SpellCard
 from ex0.CreatureCard import CreatureCard
@@ -28,7 +28,7 @@ class Deck:
             raise ValueError("The deck is empty")
         return self.card_list.pop(0)
 
-    def get_deck_stats(self) -> Dict:
+    def get_deck_stats(self) -> Dict[str, Union[int, float]]:
         creatures: List[Card] = [x for x in self.card_list
                                  if isinstance(x, CreatureCard)]
         spells: List[Card] = [x for x in self.card_list
