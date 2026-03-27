@@ -3,7 +3,7 @@ from typing import List, Dict
 import random
 from ex1.SpellCard import SpellCard
 from ex0.CreatureCard import CreatureCard
-from ex1.ArctifactCard import ArctifactCard
+from ex1.ArtifactCard import ArtifactCard
 
 
 class Deck:
@@ -34,12 +34,12 @@ class Deck:
         spells: List[Card] = [x for x in self.card_list
                               if isinstance(x, SpellCard)]
         artifacts: List[Card] = [x for x in self.card_list
-                                 if isinstance(x, ArctifactCard)]
+                                 if isinstance(x, ArtifactCard)]
         summ: int = sum(x.cost for x in self.card_list)
         return {
-            "total_cards": len(self.card_List),
+            "total_cards": len(self.card_list),
             "creatures": len(creatures),
             "spells": len(spells),
             "artifacts": len(artifacts),
-            "avg_cost": summ / len(self.card_list)
+            "avg_cost": round(summ / len(self.card_list), 2)
         }
