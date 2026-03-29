@@ -1,21 +1,18 @@
 from ex0.Card import Card
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class CreatureCard(Card):
     def __init__(self, name: str, cost: int, rarity: str,
                  health: int, attack: int) -> None:
-        try:
-            super().__init__(name, cost, rarity)
-            if attack < 0 or health < 0:
-                raise ValueError("Attack or health must be positive values")
-            else:
-                self.health = health
-                self.attack = attack
-        except ValueError as e:
-            print(f"Error: {e}")
+        super().__init__(name, cost, rarity)
+        if attack < 0 or health < 0:
+            raise ValueError("Attack or health must be positive values")
+        self.health = health
+        self.attack = attack
 
-    def play(self, game_state: Dict = None) -> Dict:
+    def play(self,
+             game_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         return {"card_played": self.name,
                 "mana_used": self.cost,
                 "effect": "Creature summoned to battlefield"}

@@ -12,6 +12,11 @@ class TournamentPlatform:
         return card.id
 
     def create_match(self, card1_id: str, card2_id: str) -> Dict[str, Any]:
+        if card1_id not in self.cards:
+            raise KeyError(f"Card with ID '{card1_id}' not registered")
+        if card2_id not in self.cards:
+            raise KeyError(f"Card with ID '{card2_id}' not registered")
+
         p1: TournamentCard = self.cards[card1_id]
         p2: TournamentCard = self.cards[card2_id]
 
@@ -40,6 +45,8 @@ class TournamentPlatform:
         )
 
     def generate_tournament_report(self) -> Dict[str, Any]:
+        if not self.cards:
+            raise ValueError("Cannot generate report with no registered cards")
         ratings: List = [card.calculate_rating()
                          for card in self.cards.values()]
         avg: float = sum(ratings) / len(ratings)

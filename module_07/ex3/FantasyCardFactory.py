@@ -28,6 +28,8 @@ class FantasyCardFactory(CardFactory):
                       str) and name_or_power.lower() in registry:
             return registry[name_or_power.lower()]
 
+        if not registry:
+            raise ValueError("Cannot select template from empty registry")
         random_key = random.choice(list(registry.keys()))
         return registry[random_key]
 

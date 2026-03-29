@@ -1,12 +1,12 @@
 from ex3.CardFactory import CardFactory
 from ex3.GameStrategy import GameStrategy
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 
 class GameEngine:
     def __init__(self) -> None:
-        self.factory: CardFactory | None = None
-        self.strategy: GameStrategy | None = None
+        self.factory: Optional[CardFactory] = None
+        self.strategy: Optional[GameStrategy] = None
         self.turns_simulated: int = 0
         self.total_damage: int = 0
         self.cards_created: int = 0

@@ -1,12 +1,12 @@
 from ex0.Card import Card
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from ex2.Compatable import Compatable
 from ex4.Rankable import Rankable
 
 
 class TournamentCard(Card, Compatable, Rankable):
     def __init__(self, name: str, cost: int,
-                 rarity: str, attack: int, health: int, rating: int):
+                 rarity: str, attack: int, health: int, rating: int) -> None:
         super().__init__(name, cost, rarity)
         self.id: str = f"{name.split()[-1].lower()}_001"
         self.attack_v = attack
@@ -15,14 +15,15 @@ class TournamentCard(Card, Compatable, Rankable):
         self.losses = 0
         self.rating = rating
 
-    def play(self, game_state: Dict = None) -> Dict[str, Any]:
+    def play(self,
+             game_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         return {
             "card_played": self.name,
             "mana_used": self.cost,
             "effect": "Entered the tournament grounds"
         }
 
-    def attack(self, target) -> Dict[str, Any]:
+    def attack(self, target: Any) -> Dict[str, Any]:
         target_name: str = (target.name if hasattr(target, 'name')
                             else str(target))
         return {
@@ -41,7 +42,7 @@ class TournamentCard(Card, Compatable, Rankable):
         }
 
     def get_combat_stats(self) -> Dict[str, int]:
-        return {"attack": self.attack, "health": self.health}
+        return {"attack": self.attack_v, "health": self.health}
 
     def update_wins(self, wins: int) -> None:
         self.wins += wins
@@ -51,7 +52,7 @@ class TournamentCard(Card, Compatable, Rankable):
         self.losses += losses
         self.rating -= (losses * 16)
 
-    def get_rank_info(self) -> Dict:
+    def get_rank_info(self) -> Dict[str, Any]:
         return {
             "rating": self.calculate_rating(),
             "record": f"{self.wins}-{self.losses}"

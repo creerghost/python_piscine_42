@@ -1,5 +1,5 @@
 from ex0.Card import Card
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from ex2.Compatable import Compatable
 from ex2.Magical import Magical
 
@@ -13,7 +13,8 @@ class EliteCard(Card, Compatable, Magical):
         self.atk = atk
         self.is_alive: bool = True
 
-    def play(self, game_state: Dict = None) -> Dict[str, Any]:
+    def play(self,
+             game_state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         return {
             "action": "play",
             "card": self.name,
@@ -43,7 +44,7 @@ class EliteCard(Card, Compatable, Magical):
         }
 
     def get_combat_stats(self) -> Dict[str, Any]:
-        return {"hp": self.hp, "atk": self.base_atk}
+        return {"hp": self.hp, "atk": self.atk}
 
     def cast_spell(self, spell_name: str,
                    targets: List[str]) -> Dict[str, Any]:

@@ -14,11 +14,11 @@ class Deck:
         self.card_list.append(card)
 
     def remove_card(self, card_name: str) -> bool:
-        remove: Card = [x for x in self.card_list if x.name == self.card_list]
-        if remove is None:
-            return False
-        self.card_list.pop(remove)
-        return True
+        for i, card in enumerate(self.card_list):
+            if card.name == card_name:
+                self.card_list.pop(i)
+                return True
+        return False
 
     def shuffle(self) -> None:
         random.shuffle(self.card_list)
@@ -29,6 +29,8 @@ class Deck:
         return self.card_list.pop(0)
 
     def get_deck_stats(self) -> Dict[str, Union[int, float]]:
+        if not self.card_list:
+            raise ValueError("Cannot calculate stats for empty deck")
         creatures: List[Card] = [x for x in self.card_list
                                  if isinstance(x, CreatureCard)]
         spells: List[Card] = [x for x in self.card_list
