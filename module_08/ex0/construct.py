@@ -1,6 +1,9 @@
 import sys
 import os
 import site
+#  python3 -m venv matrix_env
+#  source matrix_env/bin/activate
+#  deactivate
 
 
 def is_in_venv() -> bool:
@@ -53,7 +56,8 @@ def display_inside_venv() -> None:
         print(f"Environment Path: {venv_path}\n")
 
         print("SUCCESS: You're in an isolated environment!")
-        print("Safe to install packages without affecting the global system.\n")
+        print("Safe to install packages without affecting"
+              " the global system.\n")
 
         print("Package installation path:")
 
@@ -81,6 +85,7 @@ def main() -> None:
             display_outside_venv()
     except Exception as e:
         print(f"A glitch in the Matrix occurred: {e}")
+
 
 if __name__ == "__main__":
     main()
