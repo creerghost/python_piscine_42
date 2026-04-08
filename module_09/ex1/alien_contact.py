@@ -69,25 +69,27 @@ def main() -> None:
         "is_verified": False
     }
     try:
-        valid_contact = AlienContact(**valid_contact)
+        contact = AlienContact(**valid_contact)
 
-        print(f"ID: {valid_contact.contact_id}")
-        print(f"Type: {valid_contact.contact_type.value}")
-        print(f"Location: {valid_contact.location}")
-        print(f"Signal: {valid_contact.signal_strength}/10")
-        print(f"Duration: {valid_contact.duration_minutes} minutes")
-        print(f"Witnesses: {valid_contact.witness_count}")
-        print(f"Message: '{valid_contact.message_received}'\n")
+        print(f"ID: {contact.contact_id}")
+        print(f"Type: {contact.contact_type.value}")
+        print(f"Location: {contact.location}")
+        print(f"Signal: {contact.signal_strength}/10")
+        print(f"Duration: {contact.duration_minutes} minutes")
+        print(f"Witnesses: {contact.witness_count}")
+        print(f"Message: '{contact.message_received}'\n")
     except ValidationError as e:
-        print(f"Invalid contact report: {e.errors()[0]['msg']}")
+        raw_msg: str = e.errors()[0]['msg']
+        print(raw_msg.replace("Value error, ", ""))
 
     print("=" * 30)
     print("Expected validation error:")
 
     try:
-        invalid_contact = AlienContact(**invalid_contact)
+        invalid_contact_model = AlienContact(**invalid_contact)
     except ValidationError as e:
-        print(e.errors()[0]['ctx']['error'])
+        raw_msg = e.errors()[0]['msg']
+        print(raw_msg.replace("Value error, ", ""))
 
 
 if __name__ == "__main__":

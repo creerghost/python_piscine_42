@@ -57,48 +57,47 @@ def main() -> None:
     print("=" * 30)
     print("Valid mission created:")
 
-    valid_crew: List[CrewMember] = [
-        CrewMember(
-            member_id="CM-001",
-            name="Sarah Connor",
-            rank=Rank.commander,
-            age=45,
-            specialization="Mission Command",
-            years_experience=20,
-            is_active=True
-        ),
-        CrewMember(
-            member_id="CM-002",
-            name="John Smith",
-            rank=Rank.lieutenant,
-            age=35,
-            specialization="Navigation",
-            years_experience=10,
-            is_active=True
-        ),
-        CrewMember(
-            member_id="CM-003",
-            name="Alice Johnson",
-            rank=Rank.officer,
-            age=25,
-            specialization="Engineering",
-            years_experience=5,
-            is_active=True
-        )
-    ]
-
-    valid_mission: Dict[str, Any] = {
-        "mission_id": "M2024_MARS",
-        "mission_name": "Mars Colony Establishment",
-        "destination": "Mars",
-        "launch_date": datetime.now(),
-        "duration_days": 900,
-        "crew": valid_crew,
-        "mission_status": "planned",
-        "budget_millions": 2500.0
-    }
-
     try:
+        valid_crew: List[CrewMember] = [
+            CrewMember(
+                member_id="CM-001",
+                name="Sarah Connor",
+                rank=Rank.commander,
+                age=45,
+                specialization="Mission Command",
+                years_experience=20,
+                is_active=True
+            ),
+            CrewMember(
+                member_id="CM-002",
+                name="John Smith",
+                rank=Rank.lieutenant,
+                age=35,
+                specialization="Navigation",
+                years_experience=10,
+                is_active=True
+            ),
+            CrewMember(
+                member_id="CM-003",
+                name="Alice Johnson",
+                rank=Rank.officer,
+                age=25,
+                specialization="Engineering",
+                years_experience=5,
+                is_active=True
+            )
+        ]
+
+        valid_mission: Dict[str, Any] = {
+            "mission_id": "M2024_MARS",
+            "mission_name": "Mars Colony Establishment",
+            "destination": "Mars",
+            "launch_date": datetime.now(),
+            "duration_days": 900,
+            "crew": valid_crew,
+            "mission_status": "planned",
+            "budget_millions": 2500.0
+        }
         mission = SpaceMission(**valid_mission)
         print(f"Mission Name: {mission.mission_name}")
         print(f"ID: {mission.mission_id}")
@@ -110,47 +109,48 @@ def main() -> None:
         for member in mission.crew:
             print(f"- {member.name} ({member.rank}) - {member.specialization}")
     except ValidationError as e:
-        print(e.errors()[0]['ctx']['error'])
+        raw_msg: str = e.errors()[0]['msg']
+        print(raw_msg.replace("Value error, ", ""))
 
     print("\n" + "=" * 30)
     print("Expected validation error:")
 
-    invalid_crew: List[CrewMember] = [
-        CrewMember(
-            member_id="CM-001",
-            name="John Doe",
-            rank=Rank.officer,
-            age=25,
-            specialization="Pilot",
-            years_experience=2,
-            is_active=True
-        ),
-        CrewMember(
-            member_id="CM-002",
-            name="Vladimir Nikolaev",
-            rank=Rank.captain,
-            age=25,
-            specialization="Python Developer",
-            years_experience=1,
-            is_active=True
-        )
-    ]
-
-    invalid_mission: Dict[str, Any] = {
-        "mission_id": "M-2024-001",
-        "mission_name": "Mars Mission",
-        "destination": "Mars",
-        "launch_date": datetime.now(),
-        "duration_days": 390,
-        "crew": invalid_crew,
-        "mission_status": "planned",
-        "budget_millions": 1000.0
-    }
-
     try:
+        invalid_crew: List[CrewMember] = [
+            CrewMember(
+                member_id="CM-001",
+                name="John Doe",
+                rank=Rank.officer,
+                age=18,
+                specialization="Pilot",
+                years_experience=2,
+                is_active=True
+            ),
+            CrewMember(
+                member_id="CM-002",
+                name="Vladimir Nikolaev",
+                rank=Rank.captain,
+                age=25,
+                specialization="Python Developer",
+                years_experience=1,
+                is_active=True
+            )
+        ]
+
+        invalid_mission: Dict[str, Any] = {
+            "mission_id": "M-2024-001",
+            "mission_name": "Mars Mission",
+            "destination": "Mars",
+            "launch_date": datetime.now(),
+            "duration_days": 390,
+            "crew": invalid_crew,
+            "mission_status": "planned",
+            "budget_millions": 1000.0
+        }
         mission = SpaceMission(**invalid_mission)
     except ValidationError as e:
-        print(e.errors()[0]['ctx']['error'])
+        raw_msg = e.errors()[0]['msg']
+        print(raw_msg.replace("Value error, ", ""))
 
 
 if __name__ == "__main__":
