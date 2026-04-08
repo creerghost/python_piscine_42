@@ -87,6 +87,7 @@ def main() -> None:
 
     try:
         invalid_contact_model = AlienContact(**invalid_contact)
+        print(invalid_contact_model)
     except ValidationError as e:
         raw_msg = e.errors()[0]['msg']
         print(raw_msg.replace("Value error, ", ""))
