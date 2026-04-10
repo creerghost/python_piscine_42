@@ -1,11 +1,10 @@
 import os
 import sys
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # type: ignore
 # cp .env.example .env
 
 
 def access_mainframe() -> None:
-    """Loads and validates the Oracle's configuration securely."""
     print("ORACLE STATUS: Reading the Matrix...")
 
     env_loaded: bool = load_dotenv()
@@ -24,9 +23,9 @@ def access_mainframe() -> None:
     print("\nConfiguration loaded:")
     print(f"Mode: {mode if mode else 'Unconfigured'}")
 
-    if mode == "development":
+    if mode == "development" and db_url:
         print("Database: Connected to local instance")
-    elif mode == "production":
+    elif mode == "production" and db_url:
         print("Database: Connected to production mainframe")
     else:
         print("Database: Disconnected")
@@ -50,7 +49,6 @@ def access_mainframe() -> None:
 
 
 def main() -> None:
-    """Main execution pipeline."""
     try:
         access_mainframe()
     except Exception as e:
