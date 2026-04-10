@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 
 def artifact_sorter(artifacts: List[Dict]) -> List[Dict]:
-    return sorted(artifacts, key=lambda x: x["power"])
+    return sorted(artifacts, key=lambda x: x["power"], reverse=True)
 
 
 def power_filter(mages: List[Dict], min_power: int) -> List[Dict]:
