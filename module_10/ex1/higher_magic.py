@@ -1,12 +1,12 @@
-from typing import Callable, Any, Tuple
+from typing import Callable, Tuple, List, Any
 
 
-def fireball(target: str, power: int, *args, **kwargs) -> str:
+def fireball(target: str, power: int, *args: Any, **kwargs: Any) -> str:
     return (f"Fireball hits {target} with {power} power!"
             if power else f"Fireball hits {target}")
 
 
-def heal(target: str, power: int, *args, **kwargs) -> str:
+def heal(target: str, power: int, *args: Any, **kwargs: Any) -> str:
     return (f"Heals {target} with {power} power!"
             if power else f"Heals {target}")
 
@@ -15,28 +15,34 @@ def check_power(target: str, power: int) -> bool:
     return power > 50
 
 
-def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
+def spell_combiner(spell1: Callable[[str, int], str],
+                   spell2: Callable[[str, int], str]) -> Callable[
+                    [str, int], Tuple[str, str]]:
     def combined_spell(*args, **kwargs) -> Tuple[str, str]:
         return (spell1(*args, **kwargs), spell2(*args, **kwargs))
     return combined_spell
 
 
-def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
-    def amplified_spell(*args, **kwargs) -> str:
+def power_amplifier(base_spell: Callable[[str, int], str],
+                    multiplier: int) -> Callable[[str, int], str]:
+    def amplified_spell(*args: Any, **kwargs: Any) -> str:
         return base_spell(*args, **kwargs) * multiplier
     return amplified_spell
 
 
-def conditional_caster(condition: Callable, spell: Callable) -> Callable:
-    def conditional_spell(*args, **kwargs) -> Any:
+def conditional_caster(condition: Callable[[str, int], bool],
+                       spell: Callable[[str, int], str]) -> Callable[[
+                        str, int], str]:
+    def conditional_spell(*args: Any, **kwargs: Any) -> str:
         if condition(*args, **kwargs):
             return spell(*args, **kwargs)
         return "Spell fizzled"
     return conditional_spell
 
 
-def spell_sequence(spells: list[Callable]) -> Callable:
-    def sequence_spell(*args, **kwargs) -> list:
+def spell_sequence(spells: List[Callable[[str, int], str]]) -> Callable[[
+                        str, int], List[str]]:
+    def sequence_spell(*args: Any, **kwargs: Any) -> List[str]:
         return [spell(*args, **kwargs) for spell in spells]
     return sequence_spell
 
