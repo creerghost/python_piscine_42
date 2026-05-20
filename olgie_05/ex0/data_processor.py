@@ -1,11 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import Any, List
+from typing import Any, List, Tuple
 
 
 class DataProcessor(ABC):
     def __init__(self) -> None:
         self._storage: List[str] = []
         self._rank: List[int] = []
+        self.total_processed = 0
 
     @abstractmethod
     def validate(self, data: Any) -> bool:
@@ -15,7 +16,9 @@ class DataProcessor(ABC):
     def ingest(self, data: Any) -> None:
         pass
 
-    def output(self) -> tuple[int, str]:
+    def output(self) -> Tuple[int, str]:
+        if not self._storage:
+            raise IndexError("No data available")
         storage_res = self._storage.pop(0)
         rank_res = self._rank.pop(0)
         return (rank_res, storage_res)
@@ -23,118 +26,89 @@ class DataProcessor(ABC):
 
 class NumericProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
-        try:
-            if type(data) is int or type(data) is float \
-                    or type(data) is str:
-                int(data)
-            elif type(data) is list:
-                [int(num) for num in data]
-            else:
-                raise ValueError
+        if isinstance(data, (float, int)):
             return True
-        except ValueError:
-            return False
-        except TypeError:
-            return False
+        if isinstance(data, list):
+            return all(isinstance(x, (float, int)) for x in data)
+        return False
 
-    def ingest(self, data: int | float | list[int | float]) -> None:
-        try:
-            if type(data) is int or type(data) is float \
-                    or type(data) is str:
-                int(data)
-                self._storage.append(str(data))
-                self._rank.append(len(self._rank))
-            elif type(data) is list:
-                for num in data:
-                    int(num)
-                    self._storage.append(str(num))
-                    self._rank.append(len(self._rank))
-            else:
-                print("hi")
-        except ValueError:
-            raise ValueError("Improper numeric data")
+    def ingest(self, data: Any) -> None:
+        if isinstance(data, (float, int)):
+            values = [data]
+        elif isinstance(data, list):
+            if not all(isinstance(x, (float, int)) for x in data):
+                raise ValueError("Invalid numeric data")
+            values = data
+        else:
+            raise ValueError("Invalid numeric data")
+
+        for v in values:
+            self._storage.append(str(v))
+            self._rank.append(len(self._rank))
+            self.total_processed += 1
 
 
 class TextProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
         if type(data) is str:
             return True
-        if type(data) is list and all(type(s) is str for s in data):
+        if type(data) is list and all(type(x) is str for x in data):
             return True
         return False
 
-    def ingest(self, data: str | list[str]) -> None:
+    def ingest(self, data: Any) -> None:
         if type(data) is str:
-            self._storage.append(data)
+            values = [data]
+        elif type(data) is list:
+            if not all(type(x) is str for x in data):
+                raise TypeError("Invalid text data")
+            values = data
+        else:
+            raise TypeError("Invalid text data")
+
+        for v in values:
+            self._storage.append(v)
             self._rank.append(len(self._rank))
             self.total_processed += 1
-        elif type(data) is list and all(type(s) is str for s in data):
-            for s in data:
-                self._storage.append(s)
-                self._rank.append(len(self._rank))
-                self.total_processed += 1
-        else:
-            raise TypeError("Improper text data")
 
 
 class LogProcessor(DataProcessor):
     def validate(self, data: Any) -> bool:
-        try:
-            log_keys = ["log_level", "log_message"]
-            if type(data) is dict:
-                key, val = zip(*data.items())
-                # key = data.keys()
-                # val = data.values()
-                if [k for k in key if k not in log_keys]:
-                    raise AttributeError
-                if [v for v in val if type(v) is not str]:
-                    raise AttributeError
-                return True
-            elif type(data) is list:
-                for d in data:
-                    key, val = zip(*d.items())
-                    if [k for k in key if k not in log_keys]:
-                        raise AttributeError
-                    if [v for v in val if type(v) is not str]:
-                        raise AttributeError
-                    return True
-            else:
-                return False
-        except AttributeError:
-            return False
+        log_keys = {"log_level", "log_message"}
 
-    def ingest(
-        self,
-        data: dict[str, str] | list[dict[str, str]],
-    ) -> None:
-        log_keys = ["log_level", "log_message"]
         if type(data) is dict:
-            key, val = zip(*data.items())
-            # key = data.keys()
-            # val = data.values()
-            if [k for k in key if k not in log_keys]:
-                raise AttributeError
-            if [v for v in val if type(v) is not str]:
-                raise AttributeError
-            for v in val:
+            if set(data.keys()) != log_keys:
+                return False
+            return all(type(v) is str for v in data.values())
+
+        if type(data) is list:
+            for d in data:
+                if set(d.keys()) != log_keys:
+                    return False
+                if not all(type(v) is str for v in d.values()):
+                    return False
+            return True
+
+        return False
+
+    def ingest(self, data: dict[str, str] | list[dict[str, str]]) -> None:
+        if not self.validate(data):
+            raise ValueError("Invalid log data")
+
+        if type(data) is dict:
+            for v in data.values():
                 self._storage.append(v)
                 self._rank.append(len(self._rank))
-        elif type(data) is list:
-            val_list = []
-            for d in data:
-                key, val = zip(*d.items())
-                if [k for k in key if k not in log_keys]:
-                    raise AttributeError
-                if [v for v in val if type(v) is not str]:
-                    raise AttributeError
-                val_list.append(val)
+                self.total_processed += 1
 
-            for v in val_list:
-                self._storage.append(": ".join(v))
+        elif type(data) is list:
+            for d in data:
+                self._storage.append(": ".join(d.values()))
                 self._rank.append(len(self._rank))
+                self.total_processed += 1
 
         else:
-            raise AttributeError
+            raise ValueError("Invalid log data")
 
 
 def main() -> None:
@@ -143,7 +117,7 @@ def main() -> None:
     numeric = NumericProcessor()
     print("Testing Numeric processor...")
     print(f"Trying to validate input '42': {numeric.validate(42)}")
-    print(f"Trying to validate input 'Hello': {numeric.validate("Hello")}")
+    print(f"Trying to validate input 'Hello': {numeric.validate('Hello')}")
     print("Test invalid ingestion of string 'foo' without"
           " prior validation:")
     try:
@@ -170,12 +144,11 @@ def main() -> None:
 
     log = LogProcessor()
     print("\nTesting Log Processor...")
-    print(f"Trying to validate input 'Hello': {log.validate("Hello")}")
-    data_dict: list[dict[str, str]] = [{'log_level': 'NOTICE',
-                                        'log_message': 'Connection to server'},
-                                       {'log_level': 'ERROR',
-                                        'log_message':
-                                        'Unauthorized access!!'}]
+    print(f"Trying to validate input 'Hello': {log.validate('Hello')}")
+    data_dict: list[dict[str, str]] = [
+        {'log_level': 'NOTICE', 'log_message': 'Connection to server'},
+        {'log_level': 'ERROR', 'log_message': 'Unauthorized access!!'}
+    ]
     print(f"Processing data: {data_dict}")
     print("Extracting 2 values...")
     log.ingest(data_dict)
